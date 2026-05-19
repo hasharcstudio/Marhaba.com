@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion, useMotionValue, useTransform, animate } from "framer-motion";
-import { Check, X, ShieldAlert } from "lucide-react";
+import { Check, X, ShieldAlert, User } from "lucide-react";
+import Link from "next/link";
 
 export interface Profile {
   id: string;
@@ -113,6 +114,15 @@ export default function SwipeCard({ profile, onSwipe, active }: SwipeCardProps) 
           <p className="text-sm text-neutral-200 mb-3 drop-shadow-md">
             {profile.profession} • {profile.location}
           </p>
+          
+          <Link 
+            href={`/profile/${profile.id}`}
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-2 self-start bg-white/20 hover:bg-white/30 transition-colors backdrop-blur-md px-4 py-2 rounded-full text-sm font-medium mb-2 pointer-events-auto border border-white/10"
+          >
+            <User size={16} />
+            View Full Profile
+          </Link>
           
           {profile.promptQuestion && (
             <div className="mt-3 bg-white/10 backdrop-blur-md border border-white/20 p-4 rounded-2xl">

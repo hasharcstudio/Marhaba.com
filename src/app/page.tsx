@@ -4,6 +4,7 @@ import { useState } from "react";
 import SoftAurora from "@/components/SoftAurora";
 import SwipeCard, { Profile } from "@/components/SwipeCard";
 import Navigation from "@/components/Navigation";
+import LogoLoop from "@/components/LogoLoop";
 import { AnimatePresence, motion } from "framer-motion";
 import { Settings2, Bell } from "lucide-react";
 
@@ -90,7 +91,26 @@ export default function Home() {
               </motion.div>
             </div>
             <h2 className="text-2xl font-bold mb-2">You're all caught up!</h2>
-            <p className="text-primary-foreground/80">We are finding more potential matches around your area.</p>
+            <p className="text-primary-foreground/80 mb-12">We are finding more potential matches around your area.</p>
+            
+            <div className="w-full max-w-md mt-auto mb-10 overflow-hidden">
+              <p className="text-xs text-primary-foreground/60 mb-4 uppercase tracking-widest font-semibold">Powered By</p>
+              <LogoLoop
+                logos={[
+                  { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                  { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                  { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                ]}
+                speed={40}
+                direction="left"
+                logoHeight={40}
+                gap={30}
+                fadeOut={false}
+              />
+            </div>
           </div>
         ) : (
           <AnimatePresence>
