@@ -364,7 +364,7 @@ const ProfileCardComponent = ({
     background: 'transparent',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
-    backgroundImage: \`
+    backgroundImage: `
       repeating-linear-gradient(
         0deg,
         var(--sunpillar-clr-1) calc(var(--space) * 1),
@@ -390,7 +390,7 @@ const ProfileCardComponent = ({
         hsla(0, 0%, 0%, 0.15) 20%,
         hsla(0, 0%, 0%, 0.25) 120%
       )
-    \`.replace(/\\s+/g, ' '),
+    `.replace(/\s+/g, ' '),
     gridArea: '1 / -1',
     borderRadius: cardRadius,
     pointerEvents: 'none'
@@ -399,11 +399,11 @@ const ProfileCardComponent = ({
   const glareStyle = {
     transform: 'translate3d(0, 0, 1.1px)',
     overflow: 'hidden',
-    backgroundImage: \`radial-gradient(
+    backgroundImage: `radial-gradient(
       farthest-corner circle at var(--pointer-x) var(--pointer-y),
       hsl(248, 25%, 80%) 12%,
       hsla(207, 40%, 30%, 0.8) 90%
-    )\`,
+    )`,
     mixBlendMode: 'overlay',
     filter: 'brightness(0.8) contrast(1.2)',
     zIndex: 4,
@@ -415,14 +415,14 @@ const ProfileCardComponent = ({
   return (
     <div
       ref={wrapRef}
-      className={\`relative touch-none \${className}\`.trim()}
+      className={`relative touch-none ${className}`.trim()}
       style={{ perspective: '500px', transform: 'translate3d(0, 0, 0.1px)', ...cardStyle }}
     >
       {behindGlowEnabled && (
         <div
           className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 ease-out"
           style={{
-            background: \`radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--behind-glow-color) 0%, transparent var(--behind-glow-size))\`,
+            background: `radial-gradient(circle at var(--pointer-x) var(--pointer-y), var(--behind-glow-color) 0%, transparent var(--behind-glow-size))`,
             filter: 'blur(50px) saturate(1.1)',
             opacity: 'calc(0.8 * var(--card-opacity))'
           }}
@@ -488,7 +488,7 @@ const ProfileCardComponent = ({
               <img
                 className="w-full h-full object-cover absolute left-1/2 bottom-[-1px] backface-hidden will-change-transform transition-transform duration-[120ms] ease-out"
                 src={avatarUrl}
-                alt={\`\${name || 'User'} avatar\`}
+                alt={`${name || 'User'} avatar`}
                 loading="lazy"
                 style={{
                   transformOrigin: '50% 100%',
@@ -523,7 +523,7 @@ const ProfileCardComponent = ({
                       <img
                         className="w-full h-full object-cover rounded-full"
                         src={miniAvatarUrl || avatarUrl}
-                        alt={\`\${name || 'User'} mini avatar\`}
+                        alt={`${name || 'User'} mini avatar`}
                         loading="lazy"
                         style={{ display: 'block', gridArea: 'auto', borderRadius: '50%', pointerEvents: 'auto' }}
                         onError={e => {
@@ -543,7 +543,7 @@ const ProfileCardComponent = ({
                     onClick={handleContactClick}
                     style={{ pointerEvents: 'auto', display: 'block', gridArea: 'auto', borderRadius: '8px' }}
                     type="button"
-                    aria-label={\`Contact \${name || 'user'}\`}
+                    aria-label={`Contact ${name || 'user'}`}
                   >
                     {contactText}
                   </button>
