@@ -6,7 +6,7 @@ import SwipeCard, { Profile } from "@/components/SwipeCard";
 import Navigation from "@/components/Navigation";
 import LogoLoop from "@/components/LogoLoop";
 import { AnimatePresence, motion } from "framer-motion";
-import { Settings2, Bell } from "lucide-react";
+import { Settings2, Bell, Search } from "lucide-react";
 
 // Dummy data highlighting the Bangladeshi context
 const DUMMY_PROFILES: Profile[] = [
@@ -64,17 +64,22 @@ export default function Home() {
       />
       
       {/* Top Header */}
-      <header className="absolute top-0 w-full z-40 px-6 py-4 flex justify-between items-center text-primary-foreground pt-8 pointer-events-none">
-        <button className="pointer-events-auto glass w-10 h-10 rounded-full flex items-center justify-center">
+      <header className="absolute top-0 w-full z-40 px-6 py-4 flex justify-between items-center text-foreground pt-8 pointer-events-none">
+        <button className="pointer-events-auto bg-foreground/10 hover:bg-foreground/20 transition-colors w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md">
           <Settings2 size={20} />
         </button>
         
-        <h1 className="font-bold text-2xl tracking-tighter drop-shadow-md">Marhaba</h1>
+        <h1 className="font-bold text-2xl tracking-tighter drop-shadow-sm text-primary">Marhaba</h1>
         
-        <button className="pointer-events-auto glass w-10 h-10 rounded-full flex items-center justify-center relative">
-          <Bell size={20} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full" />
-        </button>
+        <div className="flex gap-3 pointer-events-auto">
+          <button className="bg-foreground/10 hover:bg-foreground/20 transition-colors w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md">
+            <Search size={20} />
+          </button>
+          <button className="bg-foreground/10 hover:bg-foreground/20 transition-colors w-10 h-10 rounded-full flex items-center justify-center relative backdrop-blur-md">
+            <Bell size={20} />
+            <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full" />
+          </button>
+        </div>
       </header>
 
       {/* Swipe Cards Container */}

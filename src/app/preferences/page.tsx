@@ -7,11 +7,11 @@ import { ChevronLeft } from 'lucide-react';
 export default function PreferencesPage() {
   return (
     <main className="w-full h-[100dvh] bg-background text-foreground flex flex-col relative overflow-hidden">
-      <header className="absolute top-0 w-full z-40 px-6 py-4 flex items-center gap-4 text-primary-foreground pt-8 bg-gradient-to-b from-background/80 to-transparent">
-        <Link href="/" className="glass w-10 h-10 rounded-full flex items-center justify-center pointer-events-auto">
-          <ChevronLeft size={20} />
+      <header className="absolute top-0 w-full z-40 px-6 py-4 flex items-center gap-4 text-foreground pt-8 bg-gradient-to-b from-background/80 to-transparent">
+        <Link href="/" className="bg-foreground/10 hover:bg-foreground/20 transition-colors w-10 h-10 rounded-full flex items-center justify-center pointer-events-auto backdrop-blur-md">
+          <ChevronLeft size={20} className="text-foreground" />
         </Link>
-        <h1 className="font-bold text-2xl tracking-tighter drop-shadow-md">Preferences</h1>
+        <h1 className="font-bold text-2xl tracking-tighter drop-shadow-sm text-foreground">Preferences</h1>
       </header>
 
       <ScrollStack
@@ -22,7 +22,7 @@ export default function PreferencesPage() {
         stackPosition="15%"
         scaleEndPosition="5%"
         baseScale={0.8}
-        blurAmount={2}
+        blurAmount={8}
       >
         <ScrollStackItem itemClassName="bg-card text-card-foreground border border-border">
           <h2 className="text-2xl font-bold mb-4">Religion & Sect</h2>

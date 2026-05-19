@@ -48,14 +48,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${hindSiliguri.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${hindSiliguri.variable} ${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-100 dark:bg-neutral-950`}
         style={{
           // Prevent user selection to feel more like a native app
           WebkitUserSelect: "none",
           userSelect: "none",
         }}
       >
-        <div className="relative min-h-[100dvh] w-full mx-auto max-w-md overflow-hidden bg-black/5">
+        <div className="relative min-h-[100dvh] md:min-h-[min(100dvh-4rem,900px)] w-full mx-auto max-w-md overflow-hidden bg-background shadow-2xl border-x border-black/5 dark:border-white/5 md:my-8 md:rounded-[40px] md:border-y">
           {children}
         </div>
       </body>
