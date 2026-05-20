@@ -202,15 +202,6 @@ export default function SoftAurora({
       targetMouse = [0.5, 0.5];
     }
 
-    function resize() {
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
-      if (program) {
-        program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height];
-      }
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
       vertex: vertexShader,
@@ -235,6 +226,15 @@ export default function SoftAurora({
         uEnableMouse: { value: enableMouseInteraction }
       }
     });
+
+    function resize() {
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      if (program) {
+        program.uniforms.uResolution.value = [gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height];
+      }
+    }
+    window.addEventListener('resize', resize);
+    resize();
 
     const mesh = new Mesh(gl, { geometry, program });
     container.appendChild(gl.canvas);
