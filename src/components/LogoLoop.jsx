@@ -140,8 +140,7 @@ const useAnimationLoop = (trackRef, targetVelocity, seqWidth, seqHeight, isHover
   }, [targetVelocity, seqWidth, seqHeight, isHovered, hoverSpeed, isVertical, trackRef]);
 };
 
-export const LogoLoop = memo(
-  ({
+const LogoLoopComponent = ({
     logos,
     speed = 120,
     direction = 'left',
@@ -440,9 +439,9 @@ export const LogoLoop = memo(
         </div>
       </div>
     );
-  }
-);
+  };
 
+export const LogoLoop = memo(LogoLoopComponent);
 LogoLoop.displayName = 'LogoLoop';
 
 export default LogoLoop;
