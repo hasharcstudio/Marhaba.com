@@ -18,29 +18,29 @@ export default function Navigation() {
 
   const items = [
     { 
-      icon: <Compass size={22} className={activeTab === "discover" ? "text-primary" : "text-white/80"} />, 
+      icon: <Compass size={22} className={activeTab === "discover" ? "text-primary" : "text-foreground/80"} />, 
       label: "Discover", 
       onClick: () => handleTabClick("discover") 
     },
     { 
-      icon: <Heart size={22} className={activeTab === "matches" ? "text-primary" : "text-white/80"} />, 
+      icon: <Heart size={22} className={activeTab === "matches" ? "text-primary" : "text-foreground/80"} />, 
       label: "Matches", 
       onClick: () => handleTabClick("matches") 
     },
     { 
-      icon: <MessageCircle size={22} className={activeTab === "chat" ? "text-primary" : "text-white/80"} />, 
+      icon: <MessageCircle size={22} className={activeTab === "chat" ? "text-primary" : "text-foreground/80"} />, 
       label: "Chat", 
       onClick: () => handleTabClick("chat") 
     },
     { 
-      icon: <User size={22} className={activeTab === "profile" ? "text-primary" : "text-white/80"} />, 
+      icon: <User size={22} className={activeTab === "profile" ? "text-primary" : "text-foreground/80"} />, 
       label: "Profile", 
       onClick: () => handleTabClick("profile") 
     },
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 w-full z-50 pointer-events-none pb-4 sm:pb-8">
+    <div className="fixed bottom-0 left-0 w-full z-50 pointer-events-none pb-4 sm:pb-8 md:hidden">
       <div className="pointer-events-auto w-full max-w-screen-md mx-auto flex justify-center">
         <Dock 
           items={items}

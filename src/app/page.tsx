@@ -63,8 +63,8 @@ export default function Home() {
         brightness={0.8}
       />
       
-      {/* Top Header */}
-      <header className="absolute top-0 w-full z-40 px-6 py-4 flex justify-between items-center text-foreground pt-8 pointer-events-none">
+      {/* Top Header - Mobile Only */}
+      <header className="absolute top-0 w-full z-40 px-6 py-4 flex justify-between items-center text-foreground pt-8 pointer-events-none md:hidden">
         <button className="pointer-events-auto bg-foreground/10 hover:bg-foreground/20 transition-colors w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-md">
           <Settings2 size={20} />
         </button>
@@ -82,8 +82,8 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Swipe Cards Container */}
-      <div className="flex-1 relative w-full h-full">
+      {/* Swipe Cards Container - Constrained and centered on desktop */}
+      <div className="flex-1 relative w-full h-full md:max-w-md md:mx-auto md:my-8 md:border md:border-border/50 md:rounded-[40px] md:shadow-2xl md:overflow-hidden md:bg-background">
         {profiles.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-foreground p-8 text-center z-10 drop-shadow-md">
             <div className="w-24 h-24 mb-6 rounded-full glass flex items-center justify-center">

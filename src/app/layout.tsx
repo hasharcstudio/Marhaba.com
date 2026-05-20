@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Hind_Siliguri, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import TopNavbar from "@/components/TopNavbar";
 
 const hindSiliguri = Hind_Siliguri({
   subsets: ["latin", "bengali"],
@@ -55,7 +56,8 @@ export default function RootLayout({
           userSelect: "none",
         }}
       >
-        <div className="relative min-h-[100dvh] md:min-h-[min(100dvh-4rem,900px)] w-full mx-auto max-w-md overflow-hidden bg-background shadow-2xl border-x border-black/5 dark:border-white/5 md:my-8 md:rounded-[40px] md:border-y">
+        <TopNavbar />
+        <div className="relative min-h-[100dvh] w-full mx-auto md:max-w-7xl overflow-hidden bg-background shadow-2xl border-x border-black/5 dark:border-white/5 md:my-0 md:rounded-none md:border-none">
           {children}
         </div>
       </body>
