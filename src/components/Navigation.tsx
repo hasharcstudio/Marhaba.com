@@ -11,9 +11,10 @@ export default function Navigation() {
 
   const handleTabClick = (id: string) => {
     setActiveTab(id);
-    if (id === "profile") {
-      router.push("/preferences");
-    }
+    if (id === "discover") router.push("/");
+    if (id === "matches") router.push("/matches");
+    if (id === "chat") router.push("/chat");
+    if (id === "profile") router.push("/profile");
   };
 
   const items = [

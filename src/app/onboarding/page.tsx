@@ -6,6 +6,7 @@ import SoftAurora from "@/components/SoftAurora";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Camera, Sparkles, Loader2 } from "lucide-react";
 import { completeOnboarding, updatePreferences } from "@/app/actions/profile";
+import { uploadAvatar } from "@/app/actions/storage";
 
 const STEPS = ["Basic Info", "Location", "About Me", "Photos", "Preferences"];
 
@@ -23,6 +24,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Form state
   const [name, setName] = useState("");
@@ -34,6 +36,7 @@ export default function OnboardingPage() {
   const [promptQuestion, setPromptQuestion] = useState(PROMPT_OPTIONS[0]);
   const [promptAnswer, setPromptAnswer] = useState("");
   const [blurDefault, setBlurDefault] = useState(true);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [minAge, setMinAge] = useState(18);
   const [maxAge, setMaxAge] = useState(35);
   const [prefGender, setPrefGender] = useState("");
@@ -54,6 +57,18 @@ export default function OnboardingPage() {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    const { url } = await uploadAvatar(file);
+    if (url) {
+      setAvatarUrl(url);
+    }
+    setUploading(false);
+  };
+
   const finish = async () => {
     setSaving(true);
     try {
@@ -68,6 +83,7 @@ export default function OnboardingPage() {
         prompt_question: promptQuestion,
         prompt_answer: promptAnswer || null,
         is_blur_default: blurDefault,
+        avatar_url: avatarUrl,
       });
 
       // Save preferences
@@ -211,12 +227,30 @@ export default function OnboardingPage() {
                     {[0, 1, 2, 3, 4, 5].map(i => (
                       <button
                         key={i}
-                        className="aspect-[3/4] rounded-2xl border-2 border-dashed border-foreground/20 hover:border-primary/50 bg-foreground/5 flex flex-col items-center justify-center gap-1 transition-colors"
+                        onClick={() => { if (i === 0) document.getElementById('avatar-upload')?.click(); }}
+                        className="relative aspect-[3/4] rounded-2xl border-2 border-dashed border-foreground/20 hover:border-primary/50 bg-foreground/5 flex flex-col items-center justify-center gap-1 transition-colors overflow-hidden"
                       >
-                        <Camera size={20} className="text-foreground/40" />
-                        {i === 0 && <span className="text-[10px] font-semibold text-foreground/40 uppercase">Main</span>}
+                        {i === 0 && avatarUrl ? (
+                          <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                          <>
+                            {i === 0 && uploading ? (
+                              <Loader2 size={20} className="text-primary animate-spin" />
+                            ) : (
+                              <Camera size={20} className="text-foreground/40" />
+                            )}
+                            {i === 0 && <span className="text-[10px] font-semibold text-foreground/40 uppercase">Main</span>}
+                          </>
+                        )}
                       </button>
                     ))}
+                    <input 
+                      id="avatar-upload"
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={handleImageUpload} 
+                    />
                   </div>
                   <div className="flex items-center justify-between p-4 rounded-2xl bg-foreground/5 border border-border/50 mt-2">
                     <div>

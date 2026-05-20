@@ -2,6 +2,20 @@
 
 import { createClient } from "@/utils/supabase/server";
 
+export interface FullProfile {
+  id: string;
+  name: string;
+  avatar_url: string | null;
+  location: string | null;
+  profession: string | null;
+  prompt_question: string;
+  prompt_answer: string | null;
+  bio: string | null;
+  birthdate: string | null;
+  gender: string | null;
+  is_blur_default: boolean;
+}
+
 /**
  * Get current user profile
  */
@@ -17,17 +31,23 @@ export async function getCurrentProfile() {
     return { profile: null, error: "Not authenticated" };
   }
 
-  const { data, error } = await supabase
+  const { data: profileData, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
-  if (error) {
-    return { profile: null, error: error.message };
+  if (profileError) {
+    return { profile: null, preferences: null, error: profileError.message };
   }
 
-  return { profile: data, error: null };
+  const { data: prefData } = await supabase
+    .from("preferences")
+    .select("*")
+    .eq("user_id", user.id)
+    .single();
+
+  return { profile: profileData, preferences: prefData, error: null };
 }
 
 /**
