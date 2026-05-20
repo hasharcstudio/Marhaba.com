@@ -1,11 +1,15 @@
-const { Client } = require('pg');
-const fs = require('fs');
-const path = require('path');
+import pg from 'pg';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const connectionString = 'postgresql://postgres:hZ3f6BV8BHmtpsUq@db.bzmvamvwjgewddvnlfuz.supabase.co:5432/postgres';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const connectionString = process.env.SUPABASE_DB_URL || 'postgresql://postgres:hZ3f6BV8BHmtpsUq@db.bzmvamvwjgewddvnlfuz.supabase.co:5432/postgres';
 
 async function setupDatabase() {
-  const client = new Client({
+  const client = new pg.Client({
     connectionString,
   });
 

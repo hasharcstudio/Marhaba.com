@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import SoftAurora from "@/components/SoftAurora";
 import SwipeCard, { Profile } from "@/components/SwipeCard";
 import Navigation from "@/components/Navigation";
 import LogoLoop from "@/components/LogoLoop";
+import MatchModal from "@/components/MatchModal";
 import { AnimatePresence, motion } from "framer-motion";
-import { Settings2, Bell, Search } from "lucide-react";
+import { Settings2, Bell, Search, Loader2 } from "lucide-react";
+import { fetchDiscoveryFeed, submitSwipe, getMatchedUserInfo } from "@/app/actions/discovery";
 
-// Dummy data highlighting the Bangladeshi context
-const DUMMY_PROFILES: Profile[] = [
+// Fallback dummy data for when database isn't connected yet
+const FALLBACK_PROFILES: Profile[] = [
   {
     id: "p1",
     name: "Ayesha",
@@ -17,7 +19,7 @@ const DUMMY_PROFILES: Profile[] = [
     profession: "UX Designer",
     location: "Gulshan, Dhaka",
     image: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?q=80&w=600&auto=format&fit=crop",
-    isBlurredByDefault: true, // Privacy first
+    isBlurredByDefault: true,
     promptQuestion: "Best Kacchi Biryani in Dhaka is...",
     promptAnswer: "Obviously Kacchi Bhai, fight me!"
   },
@@ -40,25 +42,77 @@ const DUMMY_PROFILES: Profile[] = [
     location: "Dhanmondi, Dhaka",
     image: "https://images.unsplash.com/photo-1621592484082-2d05b1290d73?q=80&w=600&auto=format&fit=crop",
     isBlurredByDefault: true,
-    promptQuestion: "I'm looking for...",
+    promptQuestion: "I&apos;m looking for...",
     promptAnswer: "Someone who respects my career goals as much as I respect theirs."
   }
 ];
 
 export default function Home() {
-  const [profiles, setProfiles] = useState<Profile[]>(DUMMY_PROFILES);
+  const [profiles, setProfiles] = useState<Profile[]>(FALLBACK_PROFILES);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUsingLiveData, setIsUsingLiveData] = useState(false);
+  const [matchModal, setMatchModal] = useState<{
+    isOpen: boolean;
+    matchedUser: { name: string; photo: string } | null;
+  }>({ isOpen: false, matchedUser: null });
 
-  const handleSwipe = (direction: "left" | "right", id: string) => {
-    // In a real app, send swipe to API here
+  // Load profiles from Supabase on mount
+  useEffect(() => {
+    async function loadProfiles() {
+      try {
+        const { profiles: liveProfiles, error } = await fetchDiscoveryFeed();
+        
+        if (!error && liveProfiles.length > 0) {
+          setProfiles(liveProfiles);
+          setIsUsingLiveData(true);
+        }
+        // If no live data, keep fallback profiles
+      } catch {
+        // Server action failed (e.g. tables don't exist yet) — use fallback
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadProfiles();
+  }, []);
+
+  const handleSwipe = useCallback(async (direction: "left" | "right", id: string) => {
+    // Immediately remove card from UI for snappy feel
     setProfiles(current => current.filter(p => p.id !== id));
-  };
+
+    // Only call server action if using live data
+    if (isUsingLiveData) {
+      try {
+        const result = await submitSwipe(
+          id,
+          direction === "right" ? "like" : "pass"
+        );
+
+        if (result.matched) {
+          // Fetch matched user info for the modal
+          const matchedInfo = await getMatchedUserInfo(id);
+          if (matchedInfo) {
+            setMatchModal({
+              isOpen: true,
+              matchedUser: {
+                name: matchedInfo.name,
+                photo: matchedInfo.avatar_url ?? "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=600",
+              },
+            });
+          }
+        }
+      } catch {
+        // Swipe failed silently — card is already removed from UI
+      }
+    }
+  }, [isUsingLiveData]);
 
   return (
     <main className="relative w-full h-[100dvh] flex flex-col">
       {/* Background Effect */}
       <SoftAurora 
-        color1="#ffed4a" // gold
-        color2="#c90076" // crimson
+        color1="#ffed4a"
+        color2="#c90076"
         speed={0.4}
         brightness={0.8}
       />
@@ -82,9 +136,19 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Swipe Cards Container - Constrained and centered on desktop */}
+      {/* Swipe Cards Container */}
       <div className="flex-1 relative w-full h-full md:max-w-md md:mx-auto md:my-8 md:border md:border-border/50 md:rounded-[40px] md:shadow-2xl md:overflow-hidden md:bg-background">
-        {profiles.length === 0 ? (
+        {isLoading ? (
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-foreground p-8 text-center z-10">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            >
+              <Loader2 size={40} className="text-primary" />
+            </motion.div>
+            <p className="mt-4 text-muted-foreground text-sm">Finding people near you...</p>
+          </div>
+        ) : profiles.length === 0 ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-foreground p-8 text-center z-10 drop-shadow-md">
             <div className="w-24 h-24 mb-6 rounded-full glass flex items-center justify-center">
               <motion.div
@@ -103,11 +167,11 @@ export default function Home() {
               <LogoLoop
                 logos={[
                   { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
-                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" />, title: "HASHARC" },
                   { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
-                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" />, title: "HASHARC" },
                   { node: <span className="font-bold text-xl text-primary-foreground/90 whitespace-nowrap">HASHARC Studio</span>, title: "HASHARC Studio" },
-                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" /> },
+                  { node: <img src="/HASHARC Logo.jpg" alt="HASHARC Logo" className="h-10 w-10 rounded-full object-cover border-2 border-white/20" />, title: "HASHARC" },
                 ]}
                 speed={40}
                 direction="left"
@@ -129,7 +193,26 @@ export default function Home() {
             ))}
           </AnimatePresence>
         )}
+
+        {/* Live data indicator */}
+        {isUsingLiveData && !isLoading && profiles.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-emerald-500/90 backdrop-blur-md text-white text-xs font-semibold px-4 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg"
+          >
+            <span className="w-2 h-2 rounded-full bg-white animate-pulse" />
+            Live
+          </motion.div>
+        )}
       </div>
+
+      {/* Match Celebration Modal */}
+      <MatchModal
+        isOpen={matchModal.isOpen}
+        onClose={() => setMatchModal({ isOpen: false, matchedUser: null })}
+        matchedUser={matchModal.matchedUser ?? { name: "", photo: "" }}
+      />
 
       {/* Bottom Navigation */}
       <Navigation />

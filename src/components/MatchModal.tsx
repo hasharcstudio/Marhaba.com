@@ -4,20 +4,20 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X } from "lucide-react";
 import Link from "next/link";
 
-interface MatchModalProps {
+export interface MatchModalProps {
   isOpen: boolean;
   onClose: () => void;
   matchedUser: {
     name: string;
     photo?: string;
   };
-  currentUser: {
+  currentUser?: {
     name: string;
     photo?: string;
   };
 }
 
-export default function MatchModal({ isOpen, onClose, matchedUser, currentUser }: MatchModalProps) {
+export default function MatchModal({ isOpen, onClose, matchedUser, currentUser = { name: "You" } }: MatchModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (

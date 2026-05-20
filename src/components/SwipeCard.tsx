@@ -13,8 +13,9 @@ export interface Profile {
   location: string;
   image: string;
   isBlurredByDefault: boolean;
-  promptQuestion?: string;
-  promptAnswer?: string;
+  promptQuestion?: string | null;
+  promptAnswer?: string | null;
+  compatibility_score?: number;
 }
 
 interface SwipeCardProps {
@@ -87,6 +88,20 @@ export default function SwipeCard({ profile, onSwipe, active }: SwipeCardProps) 
             <ShieldAlert size={16} className="text-primary" />
             Reveal
           </button>
+        )}
+
+        {/* Compatibility Score Badge */}
+        {profile.compatibility_score != null && profile.compatibility_score > 0 && (
+          <div className={`absolute top-4 left-4 z-20 px-3 py-1.5 rounded-full backdrop-blur-md text-sm font-bold flex items-center gap-1.5 shadow-lg border ${
+            profile.compatibility_score >= 80
+              ? 'bg-emerald-500/80 border-emerald-400/30 text-white'
+              : profile.compatibility_score >= 60
+                ? 'bg-amber-500/80 border-amber-400/30 text-white'
+                : 'bg-white/20 border-white/10 text-white'
+          }`}>
+            <span className="text-xs">💫</span>
+            {profile.compatibility_score}% Match
+          </div>
         )}
 
         {/* Swipe Indicators */}
