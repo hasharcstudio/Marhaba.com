@@ -39,8 +39,8 @@ export default function PreferencesPage() {
           <h2 className="text-2xl font-bold mb-4">Education Level</h2>
           <p className="text-muted-foreground mb-6">Find partners with similar academic backgrounds and career aspirations.</p>
           <div className="flex flex-wrap gap-2">
-            <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">Bachelor's</span>
-            <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">Master's</span>
+            <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">Bachelor&apos;s</span>
+            <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">Master&apos;s</span>
             <span className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm">PhD</span>
             <span className="px-3 py-1 border border-border rounded-full text-sm text-muted-foreground">Any</span>
           </div>

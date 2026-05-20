@@ -3,7 +3,7 @@
 import SoftAurora from "@/components/SoftAurora";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { ArrowRight, Mail } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -74,7 +74,7 @@ export default function LoginPage() {
         </div>
         
         <p className="mt-8 text-sm text-foreground/70">
-          Don't have an account? <Link href="/signup" className="text-primary font-semibold hover:underline">Sign up</Link>
+          Don&apos;t have an account? <Link href="/signup" className="text-primary font-semibold hover:underline">Sign up</Link>
         </p>
       </div>
     </main>

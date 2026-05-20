@@ -12,7 +12,7 @@ const DUMMY_MESSAGES = [
   { id: "msg4", text: "That's exactly what I was thinking! 😂", sender: "me", timestamp: "10:42 AM" },
 ];
 
-export default function ChatConversationPage({ params }: { params: { matchId: string } }) {
+export default function ChatConversationPage() {
   const [messages, setMessages] = useState(DUMMY_MESSAGES);
   const [input, setInput] = useState("");
 
@@ -52,7 +52,7 @@ export default function ChatConversationPage({ params }: { params: { matchId: st
 
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 flex flex-col">
-        {messages.map((msg, i) => {
+        {messages.map((msg) => {
           const isMe = msg.sender === "me";
           return (
             <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>

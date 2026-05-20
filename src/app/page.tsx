@@ -95,7 +95,7 @@ export default function Home() {
                 <div className="w-8 h-8 rounded-full bg-primary" />
               </motion.div>
             </div>
-            <h2 className="text-2xl font-bold mb-2">You're all caught up!</h2>
+            <h2 className="text-2xl font-bold mb-2">You&apos;re all caught up!</h2>
             <p className="text-primary-foreground/80 mb-12">We are finding more potential matches around your area.</p>
             
             <div className="w-full max-w-md mt-auto mb-10 overflow-hidden">

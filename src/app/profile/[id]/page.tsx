@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use } from "react";
 import ProfileCard from "@/components/ProfileCard";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -46,12 +46,7 @@ const DUMMY_PROFILES: Profile[] = [
 
 export default function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const [profile, setProfile] = useState<Profile | null>(null);
-
-  useEffect(() => {
-    const found = DUMMY_PROFILES.find(p => p.id === resolvedParams.id);
-    if (found) setProfile(found);
-  }, [resolvedParams.id]);
+  const profile = DUMMY_PROFILES.find(p => p.id === resolvedParams.id) || null;
 
   if (!profile) {
     return (
@@ -109,7 +104,7 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
           <div className="rounded-3xl p-6 backdrop-blur-md">
             <h2 className="text-xl font-bold mb-3 text-primary">About {profile.name}</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Hi! I am a {profile.profession.toLowerCase()} based in {profile.location}. I'm very passionate about my career and love exploring different cuisines around the city during weekends. Looking for someone who shares similar values and respects boundaries.
+              Hi! I am a {profile.profession.toLowerCase()} based in {profile.location}. I&apos;m very passionate about my career and love exploring different cuisines around the city during weekends. Looking for someone who shares similar values and respects boundaries.
             </p>
 
             {profile.promptQuestion && (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, useMotionValue, useTransform, animate } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate, PanInfo } from "framer-motion";
 import { Check, X, ShieldAlert, User } from "lucide-react";
 import Link from "next/link";
 
@@ -35,7 +35,7 @@ export default function SwipeCard({ profile, onSwipe, active }: SwipeCardProps) 
   const likeOpacity = useTransform(x, [20, 100], [0, 1]);
   const nopeOpacity = useTransform(x, [-20, -100], [0, 1]);
 
-  const handleDragEnd = (event: any, info: any) => {
+  const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     const threshold = 120;
     if (info.offset.x > threshold) {
       animate(x, 400, { duration: 0.3 }).then(() => onSwipe("right", profile.id));

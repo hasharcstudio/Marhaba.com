@@ -52,7 +52,7 @@ export default function MatchModal({ isOpen, onClose, matchedUser, currentUser }
               transition={{ repeat: Infinity, repeatType: "reverse", duration: 1.5 }}
               className="text-4xl font-black italic tracking-tighter mb-8 bg-gradient-to-r from-primary via-rose-500 to-secondary bg-clip-text text-transparent drop-shadow-md"
             >
-              It's a Match!
+              It&apos;s a Match!
             </motion.div>
 
             <div className="flex justify-center items-center mb-8 relative">
