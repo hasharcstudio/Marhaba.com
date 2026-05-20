@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import SoftAurora from "@/components/SoftAurora";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Camera, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowLeft, Camera, Sparkles, Loader2 } from "lucide-react";
+import { completeOnboarding, updatePreferences } from "@/app/actions/profile";
 
 const STEPS = ["Basic Info", "Location", "About Me", "Photos", "Preferences"];
 
@@ -21,6 +22,7 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [saving, setSaving] = useState(false);
 
   // Form state
   const [name, setName] = useState("");
@@ -52,9 +54,37 @@ export default function OnboardingPage() {
     }
   };
 
-  const finish = () => {
-    // TODO: Save to Supabase
-    router.push("/");
+  const finish = async () => {
+    setSaving(true);
+    try {
+      // Save profile data
+      await completeOnboarding({
+        name,
+        gender: gender || null,
+        birthdate: birthdate || null,
+        profession: profession || null,
+        location: location || null,
+        bio: bio || null,
+        prompt_question: promptQuestion,
+        prompt_answer: promptAnswer || null,
+        is_blur_default: blurDefault,
+      });
+
+      // Save preferences
+      await updatePreferences({
+        min_age: minAge,
+        max_age: maxAge,
+        preferred_gender: prefGender || null,
+        preferred_religion: religion || null,
+        max_distance_km: maxDistance,
+      });
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      // If saving fails, still navigate (data can be updated later)
+      router.push("/");
+    }
   };
 
   const variants = {
@@ -261,9 +291,11 @@ export default function OnboardingPage() {
           ) : (
             <button
               onClick={finish}
-              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-lg shadow-primary/20"
+              disabled={saving}
+              className="flex-1 py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors shadow-lg shadow-primary/20 disabled:opacity-50"
             >
-              <Sparkles size={16} /> Start Discovering
+              {saving ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+              Start Discovering
             </button>
           )}
         </div>

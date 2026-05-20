@@ -1,14 +1,53 @@
 "use client";
 
+import { useState } from "react";
 import SoftAurora from "@/components/SoftAurora";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
-import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowRight, Loader2 } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      setError(signInError.message);
+      setLoading(false);
+      return;
+    }
+
+    router.push("/");
+    router.refresh();
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    const supabase = createClient();
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/api/auth/callback`,
+      },
+    });
+  };
+
   return (
     <main className="relative w-full h-[100dvh] flex flex-col items-center justify-center bg-background overflow-hidden">
-      {/* Background Effect */}
       <SoftAurora 
         color1="#ffed4a" 
         color2="#c90076" 
@@ -25,12 +64,21 @@ export default function LoginPage() {
         <p className="text-foreground/70 text-center mb-8 text-sm">Sign in to continue finding meaningful connections.</p>
         
         <div className="w-full bg-background/40 backdrop-blur-xl border border-white/20 dark:border-white/10 rounded-3xl p-6 shadow-2xl">
-          <form className="flex flex-col gap-4 mb-6">
+          {error && (
+            <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-500 text-sm text-center">
+              {error}
+            </div>
+          )}
+          
+          <form onSubmit={handleEmailLogin} className="flex flex-col gap-4 mb-6">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-semibold text-foreground/80 uppercase tracking-wider pl-1">Email</label>
               <input 
                 type="email" 
-                placeholder="you@example.com" 
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
                 className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground"
               />
             </div>
@@ -42,14 +90,20 @@ export default function LoginPage() {
               </div>
               <input 
                 type="password" 
-                placeholder="••••••••" 
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
                 className="w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-muted-foreground"
               />
             </div>
             
-            <button type="button" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl py-3 transition-colors flex items-center justify-center gap-2 mt-2 shadow-lg shadow-primary/20">
-              Sign In
-              <ArrowRight size={18} />
+            <button 
+              type="submit" 
+              disabled={loading}
+              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-xl py-3 transition-colors flex items-center justify-center gap-2 mt-2 shadow-lg shadow-primary/20 disabled:opacity-50"
+            >
+              {loading ? <Loader2 size={18} className="animate-spin" /> : <>Sign In <ArrowRight size={18} /></>}
             </button>
           </form>
           
@@ -60,8 +114,9 @@ export default function LoginPage() {
           </div>
           
           <button 
-            onClick={() => signIn("google", { callbackUrl: "/" })}
-            className="w-full bg-white dark:bg-neutral-900 border border-border hover:bg-neutral-50 dark:hover:bg-neutral-800 text-foreground font-medium rounded-xl py-3 transition-colors flex items-center justify-center gap-3"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+            className="w-full bg-white dark:bg-neutral-900 border border-border hover:bg-neutral-50 dark:hover:bg-neutral-800 text-foreground font-medium rounded-xl py-3 transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
